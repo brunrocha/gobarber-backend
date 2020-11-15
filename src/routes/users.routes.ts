@@ -10,13 +10,23 @@ import UpdateUserAvatarService from '../services/UpdateUserAvatarService';
 const usersRouter = Router();
 const upload = multer(uploadConfig);
 
+interface UserResponse {
+  id: string;
+  name: string;
+  email: string;
+  password?: string;
+  avatar: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
 usersRouter.post('/', async (request, response) => {
   try {
     const { name, email, password } = request.body;
 
     const createUser = new CreateUserService();
 
-    const user = await createUser.execute({
+    const user: UserResponse = await createUser.execute({
       name,
       email,
       password,
@@ -38,7 +48,7 @@ usersRouter.patch(
     try {
       const updateUserAvatar = new UpdateUserAvatarService();
 
-      const user = await updateUserAvatar.execute({
+      const user: UserResponse = await updateUserAvatar.execute({
         user_id: request.user.id,
         avatarFilename: request.file.filename,
       });
